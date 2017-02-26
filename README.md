@@ -1,4 +1,4 @@
-# starbot-vk-adapter [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
+# starbot-vk-adapter [![NPM version][npm-image]][npm-url]
 
 ## Лицензия
 
