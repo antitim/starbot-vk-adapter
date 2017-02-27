@@ -40,7 +40,7 @@ module.exports = class VkAdapter {
 
           userId = answer.userId.split('vk_')[1];
           text = answer.text;
-          let attachment = options.attachment || '';
+          let attachment = answer.attachment || '';
 
           await axios.get('messages.send', {
             params: {
