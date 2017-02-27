@@ -22,12 +22,14 @@ module.exports = class VkAdapter {
         case 'confirmation':
           if (body.group_id === self.groupId) {
             res.send(self.confirmCode);
+            res.end();
           }
 
           break;
 
         case 'message_new':
           res.send('ok');
+          res.end();
 
           let message = body.object;
 
@@ -40,21 +42,15 @@ module.exports = class VkAdapter {
           text = answer.text;
           let attachment = options.attachment || '';
 
-          axios.get('messages.send', {
+          await axios.get('messages.send', {
             params: {
               access_token: self.token,
               user_id: userId,
               message: text,
               attachment: attachment
             }
-          }).catch(function (error) {
-            console.log(error);
           });
-
-          break;
       }
-
-      res.end();
     };
   }
 };
