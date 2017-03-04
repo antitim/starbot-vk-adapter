@@ -13,7 +13,7 @@ $ npm install --save starbot-vk-adapter
 ## Options
 
 ```js
-const bot = new Starbot({
+const bot = Starbot({
   ...
   adapter: {
     type: 'starbot-vk-adapter',
