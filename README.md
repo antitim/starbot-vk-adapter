@@ -1,6 +1,31 @@
 # starbot-vk-adapter [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
 
-## Лицензия
+## About
+
+VK ([vk.com](https://vk.com)) adapter for [StarBot](https://github.com/antitim/starbot)
+
+## Installation
+
+```sh
+$ npm install --save starbot-vk-adapter
+```
+
+## Options
+
+```js
+const bot = new Starbot({
+  ...
+  adapter: {
+    type: 'starbot-vk-adapter',
+    token: 'token',
+    groupId: 'groupId',
+    confirmCode: 'confirmCode'
+  }
+  ...
+});
+```
+
+## License
 
 MIT © [antitim](http://vk.com/antitim)
 

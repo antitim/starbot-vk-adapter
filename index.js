@@ -4,53 +4,44 @@ const axios = require('axios');
 
 axios.defaults.baseURL = 'https://api.vk.com/method/';
 
-module.exports = class VkAdapter {
+module.exports = function (settings, botControl) {
+  let { token, groupId, confirmCode } = settings || {};
 
-  constructor (options, botControl) {
-    let self = this;
+  return async (req, res) => {
+    let body = req.body;
 
-    self.token = options.token;
-    self.groupId = options.groupId;
-    self.confirmCode = options.confirmCode;
-
-    self.botControl = botControl;
-
-    self.receiver = async function (req, res) {
-      let body = req.body;
-
-      switch (body.type) {
-        case 'confirmation':
-          if (body.group_id === self.groupId) {
-            res.send(self.confirmCode);
-            res.end();
-          }
-
-          break;
-
-        case 'message_new':
-          res.send('ok');
+    switch (body.type) {
+      case 'confirmation':
+        if (body.group_id === groupId) {
+          res.send(confirmCode);
           res.end();
+        }
 
-          let message = body.object;
+        break;
 
-          let userId = 'vk_' + message.user_id;
-          let text = message.body;
+      case 'message_new':
+        res.send('ok');
+        res.end();
 
-          let answer = await self.botControl(userId, text);
+        let message = body.object;
 
-          userId = answer.userId.split('vk_')[1];
-          text = answer.text;
-          let attachment = answer.attachment || '';
+        let userId = 'vk_' + message.user_id;
+        let text = message.body;
 
-          await axios.get('messages.send', {
-            params: {
-              access_token: self.token,
-              user_id: userId,
-              message: text,
-              attachment: attachment
-            }
-          });
-      }
-    };
-  }
+        let answer = await botControl(userId, text);
+
+        userId = answer.userId.split('vk_')[1];
+        text = answer.text;
+        let attachment = answer.attachment || '';
+
+        await axios.get('messages.send', {
+          params: {
+            access_token: token,
+            user_id: userId,
+            message: text,
+            attachment: attachment
+          }
+        });
+    }
+  };
 };

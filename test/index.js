@@ -11,14 +11,14 @@ describe('Vk Adapter', () => {
     message: 'Кто там?'
   });
 
-  let vk = new Adapter({
+  let vk = Adapter({
     token: 'fakeToken',
     groupId: 'fakeGroupId',
     confirmCode: 'fakeConfirmCode'
   }, bot);
 
   it('confirmation', async () => {
-    await vk.receiver({body: {
+    await vk({body: {
       type: 'confirmation',
       group_id: 'fakeGroupId'
     }}, {
@@ -42,7 +42,7 @@ describe('Vk Adapter', () => {
       });
     });
 
-    await vk.receiver({body: {
+    await vk({body: {
       type: 'message_new',
       object: {
         user_id: 'fakeUserId',
