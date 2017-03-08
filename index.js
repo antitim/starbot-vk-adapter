@@ -35,12 +35,10 @@ module.exports = function (settings, botControl) {
         let attachment = answer.attachment || '';
 
         await axios.post('messages.send', {
-          data: {
-            access_token: token,
-            user_id: userId,
-            message: text,
-            attachment: attachment
-          }
+          access_token: token,
+          user_id: userId,
+          message: text,
+          attachment: attachment
         });
     }
   };

@@ -30,15 +30,13 @@ describe('Vk Adapter', () => {
   });
 
   it('message_new', async () => {
-    let stub = sinon.stub(axios, 'post', function (methodName, params) {
+    let stub = sinon.stub(axios, 'post', function (methodName, data) {
       methodName.should.equal('messages.send');
-      params.should.deep.equal({
-        data: {
-          access_token: 'fakeToken',
-          user_id: 'fakeUserId',
-          message: 'Кто там?',
-          attachment: ''
-        }
+      data.should.deep.equal({
+        access_token: 'fakeToken',
+        user_id: 'fakeUserId',
+        message: 'Кто там?',
+        attachment: ''
       });
     });
 
