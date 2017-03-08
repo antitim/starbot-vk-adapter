@@ -1,8 +1,7 @@
 'use strict';
 
 const axios = require('axios');
-
-axios.defaults.baseURL = 'https://api.vk.com/method/';
+const querystring = require('querystring');
 
 module.exports = function (settings, botControl) {
   let { token, groupId, confirmCode } = settings || {};
@@ -32,13 +31,16 @@ module.exports = function (settings, botControl) {
 
         userId = answer.userId.split('vk_')[1];
         text = answer.text;
-        let attachment = answer.attachment || '';
 
-        await axios.post('messages.send', {
-          access_token: token,
-          user_id: userId,
-          message: text,
-          attachment: attachment
+        await axios.request({
+          url: 'https://api.vk.com/method/messages.send',
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          data: querystring.stringify({
+            access_token: token,
+            user_id: userId,
+            message: text
+          })
         });
     }
   };

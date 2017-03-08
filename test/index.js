@@ -5,6 +5,7 @@ const sinon = require('sinon');
 const botControl = require('starbot-ktotam-bot');
 const Adapter = require('..');
 const axios = require('axios');
+const querystring = require('querystring');
 
 describe('Vk Adapter', () => {
   let bot = botControl({
@@ -30,13 +31,16 @@ describe('Vk Adapter', () => {
   });
 
   it('message_new', async () => {
-    let stub = sinon.stub(axios, 'post', function (methodName, data) {
-      methodName.should.equal('messages.send');
-      data.should.deep.equal({
-        access_token: 'fakeToken',
-        user_id: 'fakeUserId',
-        message: 'Кто там?',
-        attachment: ''
+    let stub = sinon.stub(axios, 'request', function (params) {
+      params.should.deep.equal({
+        url: 'https://api.vk.com/method/messages.send',
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        data: querystring.stringify({
+          access_token: 'fakeToken',
+          user_id: 'fakeUserId',
+          message: 'Кто там?'
+        })
       });
     });
 
