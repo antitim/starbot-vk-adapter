@@ -34,8 +34,8 @@ module.exports = function (settings, botControl) {
         text = answer.text;
         let attachment = answer.attachment || '';
 
-        await axios.get('messages.send', {
-          params: {
+        await axios.post('messages.send', {
+          data: {
             access_token: token,
             user_id: userId,
             message: text,

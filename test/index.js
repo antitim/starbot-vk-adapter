@@ -30,10 +30,10 @@ describe('Vk Adapter', () => {
   });
 
   it('message_new', async () => {
-    let stub = sinon.stub(axios, 'get', function (methodName, params) {
+    let stub = sinon.stub(axios, 'post', function (methodName, params) {
       methodName.should.equal('messages.send');
       params.should.deep.equal({
-        params: {
+        data: {
           access_token: 'fakeToken',
           user_id: 'fakeUserId',
           message: 'Кто там?',
