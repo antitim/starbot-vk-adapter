@@ -1,25 +1,25 @@
-'use strict';
-
 require('chai').should();
 const sinon = require('sinon');
-const botControl = require('starbot-ktotam-bot');
+const Bot = require('starbot-ktotam-bot');
 const Adapter = require('..');
 const axios = require('axios');
 const querystring = require('querystring');
 
 describe('Vk Adapter', () => {
-  let bot = botControl({
+  let bot = new Bot({
     message: 'Кто там?'
   });
 
-  let vk = Adapter({
+  let adapter = new Adapter({
     token: 'fakeToken',
     groupId: 'fakeGroupId',
     confirmCode: 'fakeConfirmCode'
-  }, bot);
+  });
+
+  adapter.bot = bot;
 
   it('confirmation', async () => {
-    await vk({body: {
+    await adapter.middleware({body: {
       type: 'confirmation',
       group_id: 'fakeGroupId'
     }}, {
@@ -27,6 +27,8 @@ describe('Vk Adapter', () => {
         data.should.equal('fakeConfirmCode');
       },
       end: function () {}
+    }, (err) => {
+      err.should.be.null();
     });
   });
 
@@ -44,7 +46,7 @@ describe('Vk Adapter', () => {
       });
     });
 
-    await vk({body: {
+    await adapter.middleware({body: {
       type: 'message_new',
       object: {
         user_id: 'fakeUserId',
@@ -55,6 +57,8 @@ describe('Vk Adapter', () => {
         data.should.equal('ok');
       },
       end: function () {}
+    }, (err) => {
+      err.should.be.null();
     });
 
     stub.restore();
