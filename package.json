@@ -33,7 +33,7 @@
     "mocha": "^3.1.2",
     "pre-commit": "^1.2.2",
     "sinon": "^1.17.7",
-    "starbot-ktotam-bot": "git+https://git@github.com:antitim/starbot-ktotam-bot.git#v2"
+    "starbot-ktotam-bot": "git+https://github.com/antitim/starbot-ktotam-bot.git#v2"
   },
   "dependencies": {
     "axios": "^0.15.3"
