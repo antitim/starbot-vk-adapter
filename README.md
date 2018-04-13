@@ -13,16 +13,14 @@ $ npm install --save starbot-vk-adapter
 ## Options
 
 ```js
-const bot = Starbot({
-  ...
-  adapter: {
-    type: 'starbot-vk-adapter',
-    token: 'token',
-    groupId: 'groupId',
-    confirmCode: 'confirmCode'
-  }
-  ...
+const AdapterVk = require('starbot-vk-adapter');
+
+const adapter = new AdapterVk({
+  token: 'token',
+  groupId: 'groupId',
+  confirmCode: 'confirmCode',
 });
+
 ```
 
 ## License
