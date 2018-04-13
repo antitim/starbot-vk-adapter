@@ -1,47 +1,61 @@
-'use strict';
-
 const axios = require('axios');
 const querystring = require('querystring');
 
-module.exports = function (settings, botControl) {
-  let { token, groupId, confirmCode } = settings || {};
+class Adapter {
+  constructor (settings) {
+    if (!settings.token) throw new Error('Not specified token in settings');
+    if (!settings.groupId) throw new Error('Not specified groupId in settings');
+    if (!settings.confirmCode) throw new Error('Not specified confirmCode in settings');
 
-  return async (req, res) => {
-    let body = req.body;
+    this.token = settings.token;
+    this.groupId = settings.groupId;
+    this.confirmCode = settings.confirmCode;
+  }
 
-    switch (body.type) {
-      case 'confirmation':
-        if (body.group_id === groupId) {
-          res.send(confirmCode);
-          res.end();
-        }
+  set bot (bot) {
+    this.message = bot.message.bind(bot);
+    bot.on('message', (message) => {
+      axios.request({
+        url: 'https://api.vk.com/method/messages.send',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: querystring.stringify({
+          access_token: this.token,
+          user_id: message.client.split('vk-')[1],
+          message: message.text
+        })
+      });
+    });
+  }
 
-        break;
+  async middleware (req, res, next) {
+    try {
+      const {
+        body
+      } = req;
 
-      case 'message_new':
-        res.send('ok');
-        res.end();
+      switch (body.type) {
+        case 'confirmation':
+          if (body.group_id === this.groupId) {
+            res.send(this.confirmCode);
+          }
+          break;
 
-        let message = body.object;
+        case 'message_new':
+          res.send('ok');
 
-        let userId = 'vk_' + message.user_id;
-        let text = message.body;
-
-        let answer = await botControl(userId, text);
-
-        userId = answer.userId.split('vk_')[1];
-        text = answer.text;
-
-        await axios.request({
-          url: 'https://api.vk.com/method/messages.send',
-          method: 'POST',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          data: querystring.stringify({
-            access_token: token,
-            user_id: userId,
-            message: text
-          })
-        });
+          await this.message({
+            client: `vk-${body.object.user_id}`,
+            text: body.object.body
+          });
+          break;
+      }
+    } catch (err) {
+      next(err);
     }
-  };
-};
+  }
+}
+
+module.exports = Adapter;
