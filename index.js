@@ -3,6 +3,10 @@ const querystring = require('querystring');
 
 class Adapter {
   constructor (settings) {
+    if (!settings.token) throw new Error('Not specified token in settings');
+    if (!settings.groupId) throw new Error('Not specified groupId in settings');
+    if (!settings.confirmCode) throw new Error('Not specified confirmCode in settings');
+
     this.token = settings.token;
     this.groupId = settings.groupId;
     this.confirmCode = settings.confirmCode;
